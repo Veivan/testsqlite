@@ -1,8 +1,8 @@
 package main;
 
-import java.io.File;
 import java.io.IOException;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,9 +11,19 @@ public class DocPage {
 
 	private Document doc;
 
-	public DocPage(String docname) {
+/*	public DocPage(String docname) {
 		try {
 			doc = Jsoup.parse(new File(docname), "utf-8");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	} */
+
+	public DocPage(String url) {
+		try {
+			Connection conn = Jsoup.connect(url);
+			doc = conn.get();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,7 +53,8 @@ public class DocPage {
 					.first();
 			Element src = field_content.getElementsByTag("img").first();
 			String imgref = src.attr("src");
-			if (imgref != null);
+			if (imgref != null)
+				;
 		}
 		title = col.getElementsByClass("views-field-field-date-of-birth-value")
 				.first();

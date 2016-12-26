@@ -15,50 +15,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 public class ParsSite {
-
-	// HTTP GET request
-	public static void DoHttpGet() throws Exception {
-		URL connection = new URL("https://podari-zhizn.ru/main/children");
-		HttpsURLConnection urlconn = (HttpsURLConnection) connection
-				.openConnection();
-		urlconn.setRequestMethod("GET");
-		urlconn.connect();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				urlconn.getInputStream()));
-
-		StringBuffer text = new StringBuffer();
-		String line = "";
-		while ((line = reader.readLine()) != null) {
-			text.append(line);
-		}
-		Save2file(text.toString(), "d:/temp/children0.htm");
-		urlconn.disconnect();
-	}
 	
-	// HttpClient GET request
-	public static void DoHttClientpGet() throws Exception {
-		HttpClient client = HttpClientBuilder.create().build();
-		String url = "https://podari-zhizn.ru/main/children";
-		HttpGet request = new HttpGet(url);
-		HttpResponse response = client.execute(request);
-
-		System.out.println("Response Code : "
-				+ response.getStatusLine().getStatusCode());
-
-
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				response.getEntity().getContent()));
-
-		StringBuffer text = new StringBuffer();
-		String line = "";
-		while ((line = reader.readLine()) != null) {
-			text.append(line);
-		}
-
-		Save2file(text.toString(), "d:/temp/children02.htm");
-	}
+	private DocPage page;
 	
-	public static void DoParsing() throws Exception {
+	public void DoParsing() throws Exception {
 		URL url = null;
 		HttpsURLConnection urlconn = null;
 		String fname;
@@ -134,6 +94,48 @@ public class ParsSite {
 
 	}
 
+	// HTTP GET request
+	public static void DoHttpGet() throws Exception {
+		URL connection = new URL("https://podari-zhizn.ru/main/children");
+		HttpsURLConnection urlconn = (HttpsURLConnection) connection
+				.openConnection();
+		urlconn.setRequestMethod("GET");
+		urlconn.connect();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				urlconn.getInputStream()));
+
+		StringBuffer text = new StringBuffer();
+		String line = "";
+		while ((line = reader.readLine()) != null) {
+			text.append(line);
+		}
+		Save2file(text.toString(), "d:/temp/children0.htm");
+		urlconn.disconnect();
+	}
+	
+	// HttpClient GET request
+	public static void DoHttClientpGet() throws Exception {
+		HttpClient client = HttpClientBuilder.create().build();
+		String url = "https://podari-zhizn.ru/main/children";
+		HttpGet request = new HttpGet(url);
+		HttpResponse response = client.execute(request);
+
+		System.out.println("Response Code : "
+				+ response.getStatusLine().getStatusCode());
+
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				response.getEntity().getContent()));
+
+		StringBuffer text = new StringBuffer();
+		String line = "";
+		while ((line = reader.readLine()) != null) {
+			text.append(line);
+		}
+
+		Save2file(text.toString(), "d:/temp/children02.htm");
+	}
+	
 	private static void Save2file(String buffer, String filename)
 			throws Exception {
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(new File(
@@ -148,14 +150,16 @@ public class ParsSite {
 
 	public static void readHTML(String html) {
 		DocPage doc = new DocPage(html);
+		//DocPage doc = new DocPage();
 		doc.getCol(1, 1);
 	}
 
 	public static void main(String[] args) {
+		ParsSite parser = new ParsSite();
 		try {
-			 DoParsing();
+			//parser.DoParsing();
 
-			// readHTML("d:/temp/children.htm");
+			readHTML("d:/temp/children11.htm");
 			//DoHttpGet();
 			//DoHttClientpGet();
 		} catch (Exception e) {
