@@ -94,6 +94,25 @@ public class ParsSite {
 
 	}
 
+	public void DoParsingFromFiles() throws Exception {
+		String fname;
+		int n = 0;
+		while (n <= 9) {
+			if (n == 0) {
+				fname = "d:/temp/children.htm";
+			} else {
+				fname = "d:/temp/children" + n + ".htm";
+			}
+			DocPage doc = new DocPage(fname);
+			for (int i = 1; i <= 2; i++) 				
+				for (int j = 1; j <= 4; j++) {
+					doc.getCol(i, j);
+					
+			}
+			n++;
+		}
+
+	}
 	// HTTP GET request
 	public static void DoHttpGet() throws Exception {
 		URL connection = new URL("https://podari-zhizn.ru/main/children");
@@ -157,9 +176,10 @@ public class ParsSite {
 	public static void main(String[] args) {
 		ParsSite parser = new ParsSite();
 		try {
-			//parser.DoParsing();
+			parser.DoParsingFromFiles();
 
-			readHTML("d:/temp/children11.htm");
+			//parser.DoParsing();
+			//readHTML("d:/temp/children.htm");
 			//DoHttpGet();
 			//DoHttClientpGet();
 		} catch (Exception e) {
