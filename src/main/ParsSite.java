@@ -4,81 +4,86 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class ParsSite {
 
-	public static void DoParsing() throws Exception {
+	// HTTP GET request
+	public static void DoHttpGet() throws Exception {
+		URL connection = new URL("https://podari-zhizn.ru/main/children");
+		HttpsURLConnection urlconn = (HttpsURLConnection) connection
+				.openConnection();
+		urlconn.setRequestMethod("GET");
+		urlconn.connect();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				urlconn.getInputStream()));
 
-		final String USER_AGENT = "Mozilla/5.0";
+		StringBuffer text = new StringBuffer();
+		String line = "";
+		while ((line = reader.readLine()) != null) {
+			text.append(line);
+		}
+		Save2file(text.toString(), "d:/temp/children0.htm");
+		urlconn.disconnect();
+	}
+	
+	// HttpClient GET request
+	public static void DoHttClientpGet() throws Exception {
 		HttpClient client = HttpClientBuilder.create().build();
+		String url = "https://podari-zhizn.ru/main/children";
+		HttpGet request = new HttpGet(url);
+		HttpResponse response = client.execute(request);
 
-		String[] replacements = new String[10];
-		String port = null;
-		String anon_level = null;
-		String country = null;
-		int cursor = 0;
+		System.out.println("Response Code : "
+				+ response.getStatusLine().getStatusCode());
 
-		// URL connection = null;
-		// HttpURLConnection urlconn = null;
 
-		String url;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				response.getEntity().getContent()));
+
+		StringBuffer text = new StringBuffer();
+		String line = "";
+		while ((line = reader.readLine()) != null) {
+			text.append(line);
+		}
+
+		Save2file(text.toString(), "d:/temp/children02.htm");
+	}
+	
+	public static void DoParsing() throws Exception {
+		URL url = null;
+		HttpsURLConnection urlconn = null;
 		String fname;
 		int n = 0;
 		while (n <= 9) {
 			if (n == 0) {
-				url = "https://podari-zhizn.ru/main/children";
+				url = new URL("https://podari-zhizn.ru/main/children");
 				fname = "d:/temp/children.htm";
 			} else {
-				url = "https://podari-zhizn.ru/main/children?page=" + n;
+				url = new URL("https://podari-zhizn.ru/main/children?page=" + n);
 				fname = "d:/temp/children" + n + ".htm";
 			}
 
 			System.out.println("Starting page: " + Integer.toString(n));
-			// urlconn = (HttpsURLConnection) connection.openConnection();
-			// urlconn.setRequestMethod("GET");
-			// urlconn.setUseCaches(false);
-			// urlconn.connect();
-
-			// посылаем GET запрос на список проксей samair'а
-			HttpGet request = new HttpGet(url);
-
-			HttpResponse response = client.execute(request);
-
-			System.out.println("Response Code : "
-					+ response.getStatusLine().getStatusCode());
-
-			// java.io.InputStream in = urlconn.getInputStream();
-			// BufferedReader reader = new BufferedReader(new
-			// InputStreamReader(in));
-
+			urlconn = (HttpsURLConnection) url.openConnection();
+			urlconn.setRequestMethod("GET");
+			urlconn.connect();
+			System.out.println("Response Code : " + urlconn.getResponseCode());			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
+					urlconn.getInputStream()));
 
 			StringBuffer text = new StringBuffer();
 			String line = "";
 			while ((line = reader.readLine()) != null) {
 				text.append(line);
-				// text += line;
 			}
 
 			Save2file(text.toString(), fname);
@@ -142,19 +147,17 @@ public class ParsSite {
 	}
 
 	public static void readHTML(String html) {
-		
 		DocPage doc = new DocPage(html);
 		doc.getCol(1, 1);
-		
-		// Document doc = Jsoup.parse(html);
-
 	}
 
 	public static void main(String[] args) {
 		try {
-			// DoParsing();
+			 DoParsing();
 
-			readHTML("d:/temp/children.htm");
+			// readHTML("d:/temp/children.htm");
+			//DoHttpGet();
+			//DoHttClientpGet();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
