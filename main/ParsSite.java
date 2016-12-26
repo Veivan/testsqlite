@@ -8,9 +8,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public class ParsSite {
 
-	public static void DoParsing() throws Exception {
+	  public static void DoParsing() throws Exception {
 
 		String[] replacements = new String[10];
 		String port = null;
@@ -33,8 +35,9 @@ public class ParsSite {
 			}
 
 			System.out.println("Starting page: " + Integer.toString(n));
-			urlconn = (HttpURLConnection) connection.openConnection();
+			urlconn = (HttpsURLConnection) connection.openConnection();
 			urlconn.setRequestMethod("GET");
+			urlconn.setUseCaches(false);
 			urlconn.connect();
 			// посылаем GET запрос на список проксей samair'а
 			java.io.InputStream in = urlconn.getInputStream();
