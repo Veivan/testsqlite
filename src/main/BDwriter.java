@@ -33,7 +33,7 @@ public class BDwriter extends Thread {
 		String sql = "CREATE TABLE IF NOT EXISTS persons (\n"
 				+ "	id integer,\n" + "	name text NOT NULL,\n"
 				+ "	summ text NOT NULL,\n" + "	picture blob,\n"
-				+ "	link text NOT NULL\n" + ");";
+				+ "	link text NOT NULL,\n" + "	age text NOT NULL\n" + ");";
 
 		try (Statement stmt = conn.createStatement()) {
 			// create a new table
@@ -47,19 +47,15 @@ public class BDwriter extends Thread {
 
 	@Override
 	public void run() {
-		
-		String picfile = "D:/Work/J2EE/Beginning/TestSQLite/pic.jpg";
-		byte[] arr = readFile(picfile);
-		
-		String sql = "INSERT INTO persons(id, name, summ, picture, link) VALUES(?,?,?,?,?)";
+		String sql = "INSERT INTO persons(id, name, summ, picture, link, age) VALUES(?,?,?,?,?,?)";
 		try (Connection conn = this.connect();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, precord.id);
 			pstmt.setString(2, precord.name);
 			pstmt.setString(3, precord.summ);
-			pstmt.setBytes(4, arr);
-			//pstmt.setString(4, precord.picture);
+			pstmt.setBytes(4, precord.picture);
 			pstmt.setString(5, precord.link);
+			pstmt.setString(6, precord.age);
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -71,7 +67,7 @@ public class BDwriter extends Thread {
      * @param file
      * @return the bytes of the file
      */
-    private byte[] readFile(String file) {
+    private static byte[] readFile(String file) {
         ByteArrayOutputStream bos = null;
         FileInputStream fis = null;
         try {
@@ -101,13 +97,15 @@ public class BDwriter extends Thread {
     
     public static void main(String[] args) {
 		String dbname = "D:/Work/J2EE/Beginning/TestSQLite/test.db";
-		
+		String picfile = "D:/Work/J2EE/Beginning/TestSQLite/pic.jpg";
+	
 		PersonRec precord = new PersonRec(); 
 		precord.id = 1;
 		precord.name = "q1";
 		precord.summ = "";
-		precord.picture = "ww";
+		precord.picture = readFile(picfile);
 		precord.link = "href1";
+		precord.age = "6 лет";
 		BDwriter mconn = new BDwriter(dbname, precord);
 		mconn.run();
 /*

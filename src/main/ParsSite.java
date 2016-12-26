@@ -15,9 +15,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 public class ParsSite {
-	
-	private DocPage page;
-	
+
+	private final String dbname = "D:/Work/J2EE/Beginning/TestSQLite/test.db";
+
 	public void DoParsing() throws Exception {
 		URL url = null;
 		HttpsURLConnection urlconn = null;
@@ -36,7 +36,7 @@ public class ParsSite {
 			urlconn = (HttpsURLConnection) url.openConnection();
 			urlconn.setRequestMethod("GET");
 			urlconn.connect();
-			System.out.println("Response Code : " + urlconn.getResponseCode());			
+			System.out.println("Response Code : " + urlconn.getResponseCode());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					urlconn.getInputStream()));
 
@@ -48,50 +48,8 @@ public class ParsSite {
 
 			Save2file(text.toString(), fname);
 
-			/*
-			 * /парсим текст страницы replacements =
-			 * text.substring(text.indexOf(
-			 * "<script src=\"http://samair.ru:81/js/m.js"
-			 * type="text/javascript">) +
-			 * "<script src=\"http://samair.ru:81/js/m.js"
-			 * type="text/javascript">.length(),
-			 * text.indexOf("</script></head>")).split(";"); //на самаире,
-			 * возможно, в целях защиты от парсеров порты в списке выводятся
-			 * javascript'ом //в начале страницы рандомом задаются 10 переменных
-			 * для каждой цыфры, затем они скриптом же и выводятся в таблицу
-			 * //replacements - как раз массив этих переменных cursor =
-			 * text.indexOf("<tr><td>"); while (cursor != -1) { cursor +=
-			 * "<tr><td>".length(); host = text.substring(cursor,
-			 * text.indexOf("<script type=\"text/javascript\">", cursor));
-			 * //host - адрес прокси сервера port =
-			 * text.substring(text.indexOf(">document.write(\":\"+", cursor) +
-			 * ">document.write(\":\"+".length(), text.indexOf(")</script>" ,
-			 * cursor)); port = removeChar(port, '+'); for (int i = 0; i<10;
-			 * i++) { port = port.replaceAll(replacements[i].split("=")[0],
-			 * replacements[i].split("=")[1]); //подставляем вместо букв циферки
-			 * } //port - порт сервера cursor = text.indexOf("</td><td>",
-			 * cursor) + "</td><td>".length(); anon_level =
-			 * text.substring(cursor, text.indexOf("</td><td>", cursor)); cursor
-			 * = text.indexOf("</td><td>", cursor) + "</td><td>".length();
-			 * cursor = text.indexOf("</td><td>", cursor) +
-			 * "</td><td>".length(); country = text.substring(cursor,
-			 * text.indexOf("</td></tr>", cursor)); //получаем остальную лабуду
-			 * - тип сервера и страна, не пропадать же траффику зря) хотя они и
-			 * вряд ли понадобятся ResultSet rs =
-			 * st.executeQuery("select host, port from proxies where host = '"
-			 * +host+"' and port = '"+port+"'"); if (!rs.next()) {
-			 * st.executeUpdate
-			 * ("INSERT INTO proxies (host, port, anon_level, country) VALUES ('"
-			 * +host+"', '"+port+"', '"+anon_level+"', '"+country+"')");
-			 * System.out.println("Added: "+host+":"+port); //Если такого хоста
-			 * и порта в базе еще нету, то вносим его туда } cursor =
-			 * text.indexOf("<tr><td>", cursor); }
-			 */
-
 			n++;
-
 		}
-
 	}
 
 	public void DoParsingFromFiles() throws Exception {
@@ -104,15 +62,18 @@ public class ParsSite {
 				fname = "d:/temp/children" + n + ".htm";
 			}
 			DocPage doc = new DocPage(fname);
-			for (int i = 1; i <= 2; i++) 				
+			for (int i = 1; i <= 2; i++)
 				for (int j = 1; j <= 4; j++) {
-					doc.getCol(i, j);
-					
-			}
+					PersonRec person = doc.getCol(i, j);
+					person.link = "https://podari-zhizn.ru/main/node/" + person.id;
+					BDwriter mconn = new BDwriter(dbname, person);
+					mconn.run();
+				}
 			n++;
 		}
 
 	}
+
 	// HTTP GET request
 	public static void DoHttpGet() throws Exception {
 		URL connection = new URL("https://podari-zhizn.ru/main/children");
@@ -131,7 +92,7 @@ public class ParsSite {
 		Save2file(text.toString(), "d:/temp/children0.htm");
 		urlconn.disconnect();
 	}
-	
+
 	// HttpClient GET request
 	public static void DoHttClientpGet() throws Exception {
 		HttpClient client = HttpClientBuilder.create().build();
@@ -141,7 +102,6 @@ public class ParsSite {
 
 		System.out.println("Response Code : "
 				+ response.getStatusLine().getStatusCode());
-
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				response.getEntity().getContent()));
@@ -154,7 +114,7 @@ public class ParsSite {
 
 		Save2file(text.toString(), "d:/temp/children02.htm");
 	}
-	
+
 	private static void Save2file(String buffer, String filename)
 			throws Exception {
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(new File(
@@ -169,7 +129,7 @@ public class ParsSite {
 
 	public static void readHTML(String html) {
 		DocPage doc = new DocPage(html);
-		//DocPage doc = new DocPage();
+		// DocPage doc = new DocPage();
 		doc.getCol(1, 1);
 	}
 
@@ -178,10 +138,10 @@ public class ParsSite {
 		try {
 			parser.DoParsingFromFiles();
 
-			//parser.DoParsing();
-			//readHTML("d:/temp/children.htm");
-			//DoHttpGet();
-			//DoHttClientpGet();
+			// parser.DoParsing();
+			// readHTML("d:/temp/children.htm");
+			// DoHttpGet();
+			// DoHttClientpGet();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

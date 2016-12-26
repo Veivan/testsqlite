@@ -6,6 +6,6 @@ public class PersonRec {
 	String summ;
 	String age;
 	String pictureLink;
-	String picture;
+	byte[] picture;
 	String link;
 }

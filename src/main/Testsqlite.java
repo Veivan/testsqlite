@@ -25,10 +25,10 @@ public class Testsqlite {
 		 * 5000); selectAll();
 		 */
 
-		//selectAllpersons();
+		selectAllpersons();
 		
-		String picfile = "D:/Work/J2EE/Beginning/TestSQLite/picfromdb.jpg";
-		readPicture(1, picfile) ;
+		//String picfile = "D:/Work/J2EE/Beginning/TestSQLite/picfromdb.jpg";
+		//readPicture(1, picfile) ;
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class Testsqlite {
 	 * select all rows in the persons table
 	 */
 	public static void selectAllpersons() {
-		String sql = "SELECT id, name, summ, picture, link FROM persons";
+		String sql = "SELECT id, name, summ, link, age FROM persons"; //picture, 
 
 		try (Connection conn = connect();
 				Statement stmt = conn.createStatement();
@@ -143,8 +143,8 @@ public class Testsqlite {
 			while (rs.next()) {
 				System.out.println(rs.getInt("id") + "\t"
 						+ rs.getString("name") + "\t" + rs.getString("summ")
-						+ "\t" + rs.getString("picture") + "\t"
-						+ rs.getString("link"));
+						//+ "\t" + rs.getString("picture") + "\t"
+						+ rs.getString("age") + rs.getString("link"));
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
