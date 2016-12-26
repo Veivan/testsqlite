@@ -4,16 +4,26 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class ParsSite {
 
@@ -28,9 +38,9 @@ public class ParsSite {
 		String country = null;
 		int cursor = 0;
 
-		//URL connection = null;
-		//HttpURLConnection urlconn = null;
-		
+		// URL connection = null;
+		// HttpURLConnection urlconn = null;
+
 		String url;
 		String fname;
 		int n = 0;
@@ -44,30 +54,31 @@ public class ParsSite {
 			}
 
 			System.out.println("Starting page: " + Integer.toString(n));
-			//urlconn = (HttpsURLConnection) connection.openConnection();
-			//urlconn.setRequestMethod("GET");
-			//urlconn.setUseCaches(false);
-			//urlconn.connect();
-			
+			// urlconn = (HttpsURLConnection) connection.openConnection();
+			// urlconn.setRequestMethod("GET");
+			// urlconn.setUseCaches(false);
+			// urlconn.connect();
+
 			// посылаем GET запрос на список проксей samair'а
 			HttpGet request = new HttpGet(url);
 
 			HttpResponse response = client.execute(request);
-			
-			System.out.println("Response Code : "
-	                + response.getStatusLine().getStatusCode());
 
-			//java.io.InputStream in = urlconn.getInputStream();
-			//BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-			
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(response.getEntity().getContent()));
+			System.out.println("Response Code : "
+					+ response.getStatusLine().getStatusCode());
+
+			// java.io.InputStream in = urlconn.getInputStream();
+			// BufferedReader reader = new BufferedReader(new
+			// InputStreamReader(in));
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
 
 			StringBuffer text = new StringBuffer();
 			String line = "";
 			while ((line = reader.readLine()) != null) {
 				text.append(line);
-				//text += line;
+				// text += line;
 			}
 
 			Save2file(text.toString(), fname);
@@ -130,9 +141,20 @@ public class ParsSite {
 		bwr.close();
 	}
 
+	public static void readHTML(String html) {
+		
+		DocPage doc = new DocPage(html);
+		doc.getCol(1, 1);
+		
+		// Document doc = Jsoup.parse(html);
+
+	}
+
 	public static void main(String[] args) {
 		try {
-			DoParsing();
+			// DoParsing();
+
+			readHTML("d:/temp/children.htm");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
