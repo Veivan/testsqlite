@@ -10,9 +10,17 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 public class ParsSite {
 
-	  public static void DoParsing() throws Exception {
+	public static void DoParsing() throws Exception {
+
+		final String USER_AGENT = "Mozilla/5.0";
+		HttpClient client = HttpClientBuilder.create().build();
 
 		String[] replacements = new String[10];
 		String port = null;
@@ -20,36 +28,49 @@ public class ParsSite {
 		String country = null;
 		int cursor = 0;
 
-		URL connection = null;
-		HttpURLConnection urlconn = null;
+		//URL connection = null;
+		//HttpURLConnection urlconn = null;
+		
+		String url;
 		String fname;
 		int n = 0;
 		while (n <= 9) {
 			if (n == 0) {
-				connection = new URL("https://podari-zhizn.ru/main/children");
+				url = "https://podari-zhizn.ru/main/children";
 				fname = "d:/temp/children.htm";
 			} else {
-				connection = new URL(
-						"https://podari-zhizn.ru/main/children?page=" + n);
+				url = "https://podari-zhizn.ru/main/children?page=" + n;
 				fname = "d:/temp/children" + n + ".htm";
 			}
 
 			System.out.println("Starting page: " + Integer.toString(n));
-			urlconn = (HttpsURLConnection) connection.openConnection();
-			urlconn.setRequestMethod("GET");
-			urlconn.setUseCaches(false);
-			urlconn.connect();
+			//urlconn = (HttpsURLConnection) connection.openConnection();
+			//urlconn.setRequestMethod("GET");
+			//urlconn.setUseCaches(false);
+			//urlconn.connect();
+			
 			// посылаем GET запрос на список проксей samair'а
-			java.io.InputStream in = urlconn.getInputStream();
+			HttpGet request = new HttpGet(url);
+
+			HttpResponse response = client.execute(request);
+			
+			System.out.println("Response Code : "
+	                + response.getStatusLine().getStatusCode());
+
+			//java.io.InputStream in = urlconn.getInputStream();
+			//BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			
 			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(in));
-			String text = null;
-			String line = null;
+					new InputStreamReader(response.getEntity().getContent()));
+
+			StringBuffer text = new StringBuffer();
+			String line = "";
 			while ((line = reader.readLine()) != null) {
-				text += line;
+				text.append(line);
+				//text += line;
 			}
 
-			Save2file(text, fname);
+			Save2file(text.toString(), fname);
 
 			/*
 			 * /парсим текст страницы replacements =
@@ -97,7 +118,8 @@ public class ParsSite {
 
 	}
 
-	private static void Save2file(String buffer, String filename) throws Exception {
+	private static void Save2file(String buffer, String filename)
+			throws Exception {
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(new File(
 				filename)));
 		// write contents of StringBuffer to a file
