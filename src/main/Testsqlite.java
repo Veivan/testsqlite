@@ -28,7 +28,9 @@ public class Testsqlite {
 		selectAllpersons();
 		
 		//String picfile = "D:/Work/J2EE/Beginning/TestSQLite/picfromdb.jpg";
-		//readPicture(1, picfile) ;
+		String picfile = "D:/temp/";
+		int id = 25672;
+		readPicture(id, picfile + id + ".jpg") ;
 	}
 
 	/**

@@ -1,7 +1,11 @@
 package main;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
@@ -65,13 +69,38 @@ public class ParsSite {
 			for (int i = 1; i <= 2; i++)
 				for (int j = 1; j <= 4; j++) {
 					PersonRec person = doc.getCol(i, j);
-					person.link = "https://podari-zhizn.ru/main/node/" + person.id;
+					person.link = "https://podari-zhizn.ru/main/node/"
+							+ person.id;
+					person.picture = GetPicture(person.pictureLink);
 					BDwriter mconn = new BDwriter(dbname, person);
 					mconn.run();
 				}
 			n++;
 		}
 
+	}
+
+	public static byte[] GetPicture(String pictureLink) throws Exception {
+		URL connection = new URL(pictureLink);
+		HttpsURLConnection urlconn = (HttpsURLConnection) connection
+				.openConnection();
+		urlconn.setRequestMethod("GET");
+		urlconn.connect();
+
+		try (ByteArrayOutputStream result = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = urlconn.getInputStream().read(buffer)) != -1) {
+				result.write(buffer, 0, length);
+			}
+			return result.toByteArray();
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		} finally {
+			urlconn.disconnect();
+		}
+		return null;
 	}
 
 	// HTTP GET request
