@@ -135,7 +135,7 @@ public class Testsqlite {
 	 * select all rows in the persons table
 	 */
 	public static void selectAllpersons() {
-		String sql = "SELECT id, name, summ, link, age FROM persons"; //picture, 
+		String sql = "SELECT id, name, summ, link, age, picturelink FROM persons"; //picture, 
 
 		try (Connection conn = connect();
 				Statement stmt = conn.createStatement();
@@ -144,9 +144,9 @@ public class Testsqlite {
 			// loop through the result set
 			while (rs.next()) {
 				System.out.println(rs.getInt("id") + "\t"
-						+ rs.getString("name") + "\t" + rs.getString("summ")
+						+ rs.getString("name") + "\t" + rs.getString("summ") + "\t"
 						//+ "\t" + rs.getString("picture") + "\t"
-						+ rs.getString("age") + rs.getString("link"));
+						+ rs.getString("age") + "\t"+ rs.getString("link") + "\t" + rs.getString("picturelink"));
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());

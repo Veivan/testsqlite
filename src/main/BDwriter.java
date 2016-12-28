@@ -33,6 +33,7 @@ public class BDwriter extends Thread {
 		String sql = "CREATE TABLE IF NOT EXISTS persons (\n"
 				+ "	id integer,\n" + "	name text NOT NULL,\n"
 				+ "	summ text NOT NULL,\n" + "	picture blob,\n"
+				+ "	picturelink text,\n"
 				+ "	link text NOT NULL,\n" + "	age text NOT NULL\n" + ");";
 
 		try (Statement stmt = conn.createStatement()) {
@@ -47,7 +48,7 @@ public class BDwriter extends Thread {
 
 	@Override
 	public void run() {
-		String sql = "INSERT INTO persons(id, name, summ, picture, link, age) VALUES(?,?,?,?,?,?)";
+		String sql = "INSERT INTO persons(id, name, summ, picture, link, age, picturelink) VALUES(?,?,?,?,?,?,?)";
 		try (Connection conn = this.connect();
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, precord.id);
@@ -56,6 +57,7 @@ public class BDwriter extends Thread {
 			pstmt.setBytes(4, precord.picture);
 			pstmt.setString(5, precord.link);
 			pstmt.setString(6, precord.age);
+			pstmt.setString(7, precord.pictureLink);
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
