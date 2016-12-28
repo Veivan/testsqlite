@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 public class ParsSite {
+	int cnt = 10;
 
 	private final String dbname = "D:/Work/J2EE/Beginning/TestSQLite/test.db";
 
@@ -27,7 +28,7 @@ public class ParsSite {
 		HttpsURLConnection urlconn = null;
 		String fname;
 		int n = 0;
-		while (n <= 9) {
+		while (n <= cnt) {
 			if (n == 0) {
 				url = new URL("https://podari-zhizn.ru/main/children");
 				fname = "d:/temp/children.htm";
@@ -59,7 +60,7 @@ public class ParsSite {
 	public void DoParsingFromFiles() throws Exception {
 		String fname;
 		int n = 0;
-		while (n <= 9) {
+		while (n <= cnt) {
 			if (n == 0) {
 				fname = "d:/temp/children.htm";
 			} else {
@@ -165,9 +166,9 @@ public class ParsSite {
 	public static void main(String[] args) {
 		ParsSite parser = new ParsSite();
 		try {
+			//parser.DoParsing(); // Getting pages 2 files
 			parser.DoParsingFromFiles();
 
-			// parser.DoParsing();
 			// readHTML("d:/temp/children.htm");
 			// DoHttpGet();
 			// DoHttClientpGet();
