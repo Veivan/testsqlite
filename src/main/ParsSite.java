@@ -1,10 +1,7 @@
 package main;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -19,7 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 public class ParsSite {
-	int cnt = 10;
+	int cnt = 12;
 
 	private final String dbname = "D:/Work/J2EE/Beginning/TestSQLite/test.db";
 
@@ -166,7 +163,7 @@ public class ParsSite {
 	public static void main(String[] args) {
 		ParsSite parser = new ParsSite();
 		try {
-			//parser.DoParsing(); // Getting pages 2 files
+			parser.DoParsing(); // Getting pages 2 files
 			parser.DoParsingFromFiles();
 
 			// readHTML("d:/temp/children.htm");
