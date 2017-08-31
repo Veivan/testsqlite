@@ -16,9 +16,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 public class ParsSite {
-	int cnt = 12;
+	int cnt = 9; // Количество страниц -1 
 
-	private final String dbname = "D:/Work/J2EE/Beginning/TestSQLite/test.db";
+	private final String dbname = "D:/temp/test.db";
 
 	public void DoParsing() throws Exception {
 		URL url = null;

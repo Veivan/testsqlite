@@ -14,7 +14,8 @@ import java.sql.Statement;
 
 public class Testsqlite {
 
-	static String dbname = "D:/Work/J2EE/Beginning/TestSQLite/test.db";
+	//static String dbname = "D:/Work/J2EE/Beginning/TestSQLite/test.db";
+	static String dbname = "D:/temp/test.db";
 	// SQLite connection string
 	static String url = "jdbc:sqlite:" + dbname;
 
@@ -143,11 +144,13 @@ public class Testsqlite {
 				ResultSet rs = stmt.executeQuery(sql)) {
 
 			// loop through the result set
+			int i = 1;
 			while (rs.next()) {
-				System.out.println(rs.getInt("id") + "\t"
+				System.out.println(i + "\t" + rs.getInt("id") + "\t"
 						+ rs.getString("name") + "\t" + rs.getString("summ") + "\t"
 						//+ "\t" + rs.getString("picture") + "\t"
 						+ rs.getString("age") + "\t"+ rs.getString("link") + "\t" + rs.getString("picturelink"));
+				i++;
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
